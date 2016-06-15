@@ -1,0 +1,264 @@
+<style>
+.footer {
+    color: white;
+    background: #E8E8E8;
+    position: fixed;
+    top: 90%;
+    text-align:center;
+    width:100%;
+}
+.midcenter {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+}
+
+/* slide titles */
+.reveal h3 {
+  font-size: 90px;
+}
+.reveal table {
+  border-width: 1px;
+  border-spacing: 2px;
+  border-style: line;
+  border-color: gray;
+  border-collapse: collapse;
+  font-size: 0.7em;
+}
+
+/* heading for slides with two hashes ## */
+.reveal .slides section .slideContent h2 {
+   font-size: 50px;
+   font-weight: bold;
+}
+
+/* ordered and unordered list styles */
+.reveal ul,
+.reveal ol {
+    font-size: 40px;
+    list-style-type: square;
+}
+.reveal big {
+	font-size: 1.5em;
+}
+.reveal large {
+  font-size: 2.0em;
+}
+.reveal small {
+    font-style: 0.8em;
+}
+</style>
+
+
+
+
+公衆衛生学・疫学演習
+========================================================
+author: 王　超辰
+date: 2016-5-20
+transition: fade
+transition-speed: fast
+width: 1800
+height: 900
+font-import: http://fonts.googleapis.com/earlyaccess/notosansjapanese.css
+css: solarized.css
+
+本日の内容
+========================================================
+
+<br>
+* <big>記述統計学の復習</big>
+    + データの種類と要約のまとめ
+* <big>推測統計学の復習</big>
+    + 推定・検定
+* <big>診断検査法の研究</big>
+
+***
+<br>
+* <big>RCT・コホート研究・症例対照研究</big>
+
+* <big>meta分析</big>
+
+
+
+
+記述統計学の復習
+========================================================
+<big>質的変数--数字で測れない</big>
+* カテゴリへ分類できる変数
+    + ***順序ない***
+        - 例：性別(男・女); 人種(黒人・白人・黄色人種)
+    + ***順序ある***
+        - 例：１年生・２年生; 満足度(悪い・普通・良い)
+* ***表を作る***
+    + 2重分割表
+
+***
+
+<big>量的変数--数字で測れる</big>
+* ***原点0がある***
+    + 例：身長(cm); 体重(kg); 年齢(歳)
+* ***原点0がない***
+    + 例：気温$^{\circ}C$; 日付(2010-1-1)
+* ***要約統計量を求める***
+
+
+要約統計量のまとめ
+========================================================
+
+1. 中心を表す量：
+    + 平均値 (mean)；中央値(median)；最頻値(mode)
+
+        <small>library(ShinyIntroStats) -> intro_stats_shinyapps() [3]</small>
+
+2. バラツキを表す量：
+    + 標準偏差(sd)；四分位範囲(IQR)
+
+3. **中央値**と**四分位範囲**のペア
+    + 外れ値の影響を受けにくい
+4. **平均値**と**標準偏差**
+    + 外れ値がない場合に使う
+
+
+推定と検定
+========================================================
+left:40%
+<br>
+* 推測統計学
+    + 一部の**標本**(サンプル, sample)から**母集団**(population)について調べる(推測, inference)．
+* 身長の例：  
+測定値(観測値) $=$ 真の身長 $+$ 測定誤差:（モデル）
+    + **180** $=$ **179.8** $+$ 0.2
+    + **165** $=$ **164.5** $+$ 0.5
+    + **170**  $=$ **169.7** $+$ 0.3
+    + **X** $=$ **$\alpha$** $+$ $\epsilon$
+
+***
+<br>
+* クラス全員の身長を測って(観測値)，このデータを使って，日本大学生の身長予測モデルを作る:
+    + クラス全員の平均身長を日本大学生の平均身長として見積もる**(推定する)**．
+    + クラス全員の平均身長と報告された日本大学生の平均身長と違いがあるかを**検定する(test)**．
+    + 作った予測モデルを使って，ほかの大学から来た学生の身長を予想する: **予測**．
+    + その予測には，**$\alpha$**がぴったり一致することはない，普通誤差があるため区間推定が必要．$\longrightarrow$ 95%**信頼区間**
+    
+
+95% 信頼区間　身長測定の例：
+========================================================
+
+<div class="midcenter" style="margin-left:-400px; margin-top:-350px;">
+<IMG SRC="figure/CI.png" style="width:900px">
+</div>
+
+信頼区間に関する注意
+========================================================
+<br>
+* **X** $=$ **$\alpha$** $+$ $\epsilon$
+    + **$\alpha$**が95%の確率でこの区間に入る **$\bigtriangleup$**
+    + 100回同じ実験を繰り返すと，95回の信頼区間には**$\alpha$**が含まれる．**$\bigcirc$**
+* サンプルサイズ $\Uparrow$ $\longrightarrow$ 信頼区間の幅 $\Downarrow$
+
+* リスク比やオッズ比など，95%信頼区間には **1** が含まれると，統計学的に有意ではない．
+
+
+
+
+
+診断検査法の研究
+========================================================
+
+* 感度(Sn)・特異度(Sp)の推定  
+* 尤度比の推定
+    + 陽性尤度比 (LR$+$):  
+  LR$+$ $=$ Sn $\div$ (1 $-$ Sp)
+    + 陰性尤度比 (LR$-$):  
+  LR$-$ $=$ (1 $-$ Sn) $\div$ Sp
+* ROC曲線
+    + 作成
+    + 曲線下面積(AUC)の推定
+    
+<div class="midcenter" style="margin-left:-100px; margin-top:-350px;">
+<IMG SRC="figure/roc.png" style="width:1000px">
+</div>
+
+感度・特異度計算の例
+========================================================
+```{r }
+library(RcmdrPlugin.EZR)
+.Table <- matrix(c(36, 76, 15, 455), 2,2, byrow = T)
+epi.tests(.Table, conf.level = 0.95)
+```
+
+EZRでの操作
+========================================================
+<large>
+①<br>
+<IMG SRC="figure/Sensitivity00.png" style="width:1200px">
+</large>
+
+*** 
+<large>
+②<br>
+<IMG SRC="figure/Sensitivity01.png" style="width:600px">
+</large>
+
+ROC曲線とは
+========================================================
+left: 40%
+<br>
+* 検査のカットオフ値をたくさん作る;
+* 小 $\rightarrow$ 大の順番に，それぞれの感度(Sn)・特異度(Sp)を算出する．
+* **Snを$y$座標**に，**1 $-$ Spを$x$座標**にとったプロットしたグラフ．
+* AUC(Area Under the roc Curve)曲線下面積が大きいほど良い検査法．
+
+  <small>`library(plotROC); shiny_plotROC()`</small>
+
+
+***
+```{r echo=FALSE, warning=FALSE,fig.width=12, fig.height=10}
+library(plotROC)
+set.seed(2529)
+D.ex <- rbinom(200, size = 1, prob = .5)
+M1 <- rnorm(200, mean = D.ex, sd = .65)
+M2 <- rnorm(200, mean = D.ex, sd = 1.5)
+test <- data.frame(D = D.ex, D.str = c("Healthy", "Ill")[D.ex + 1], 
+                   M1 = M1, M2 = M2, stringsAsFactors = FALSE)
+longtest <- melt_roc(test, "D", c("M1", "M2"))
+pairplot <- ggplot(longtest, aes(d = D, m = M, color = name)) + geom_roc(labelsize = 10) + style_roc()
+pairplot +   ggtitle("ROC曲線と曲線下面積") + 
+  annotate("text", x = .75, y = .25, 
+           label = paste("検査法A AUC =", round(calc_auc(pairplot)$AUC[1], 2)),  size = 10, fontface = "bold") +
+  annotate("text", x = .75, y = .15, 
+           label = paste("検査法B AUC =", round(calc_auc(pairplot)$AUC[2], 2)), size = 10, fontface = "bold") +
+  scale_x_continuous("偽陽性率(1-Sp)", breaks = seq(0, 1, by = .1)) + 
+  scale_y_continuous("感度(Sn)")  +
+  theme(legend.title=element_blank()) + 
+  scale_color_discrete(breaks=c("M1", "M2"),
+                         labels=c("検査法 A", "検査法 B")) + 
+  theme(legend.text = element_text(size = 30),
+        legend.justification=c(1,0.5), legend.position=c(1,0.5), 
+        axis.text.x = element_text(size = 30), 
+        axis.title.x= element_text(size = 35),
+        axis.title.y = element_text(size = 35), 
+        axis.text.y = element_text(size = 30),
+        plot.title = element_text(size = 40, face = "bold"))
+```
+
+
+ROC曲線をEZRで作成
+========================================================
+
+
+
+```{r results='hide'}
+set.seed(2529)
+D.ex <- rbinom(200, size = 1, prob = .5)
+M1 <- rnorm(200, mean = D.ex, sd = .65)
+M2 <- rnorm(200, mean = D.ex, sd = 1.5)
+
+test <- data.frame(D = D.ex, D.str = c("Healthy", "Ill")[D.ex + 1], 
+                   M1 = M1, M2 = M2, stringsAsFactors = FALSE)
+```
+
+①![](figure/ROC00.png) ②![](figure/ROC01.png)
+
+

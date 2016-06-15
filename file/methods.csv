@@ -1,0 +1,7 @@
+データ種類,二値変数,連続変数,生存期間
+要約,分割表,ヒストグラム<br/>箱ひげ図<br/>散布図,Kaplan-Meier 曲線
+２群比較,Fisher 正確検定<br/>カイ二乗検定,t 検定<br/>Man-Whitney U 検定,logrank検定<br/>一般化 Wilcoxon 検定
+対応のある２群比較,McNemar 検定,対応のある t 検定<br/>Wilcoxon 符号付順位和検定,
+３群以上の比較,Fisher 正確検定 <br/>カイ二乗検定,分散分析 (ANOVA)<br/>Kruskal-Wallis 検定,logrank検定 <br/>一般化 Kruskal-Wallis 検定
+対応のある３群以上の比較,Cochran R 検定,反復測定分散分析<br/>Friedman検定,
+(多変量) 回帰分析,ロジスティクス回帰,単回帰・重回帰,Cox比例ハザード回帰
