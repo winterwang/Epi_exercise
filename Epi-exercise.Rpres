@@ -262,3 +262,16 @@ test <- data.frame(D = D.ex, D.str = c("Healthy", "Ill")[D.ex + 1],
 ①![](figure/ROC00.png) ②![](figure/ROC01.png)
 
 
+
+========================================================
+
+```{r results = 'asis', echo=F}
+source('https://raw.githubusercontent.com/walkerke/teaching-with-datavis/master/pyramids/rcharts_pyramids.R')
+require(rCharts)
+
+n <- dPyramid('JA', seq(2000, 2050, 10), colors = c('black', 'red'))
+n$params$width <- 600
+#n$params$height <- 300
+n
+```
+
