@@ -1,12 +1,4 @@
 <style>
-.footer {
-    color: black;
-    background: #E8E8E8;
-    position: fixed;
-    top: 90%;
-    text-align:center;
-    width:100%;
-}
 .midcenter {
     position: fixed;
     top: 50%;
@@ -47,7 +39,11 @@
 .reveal small {
     font-style: 0.8em;
 }
-
+.gra {
+    align-content: center;
+    top: 20%;
+    left: 10%;
+}
 </style>
 
 
@@ -59,29 +55,23 @@ author:
 date: 
 transition: fade
 transition-speed: fast
-width: 1800
-height: 900
 font-import: http://fonts.googleapis.com/earlyaccess/notosansjapanese.css
+width: 1600
+height: 900
 css: solarized.css
 
-<style>
-  .rChart {
-    display: block;
-    height: 800px;
-  }
-</style>
-
+<div class="gra">
 ```{r results = 'asis', echo=F}
 source('https://raw.githubusercontent.com/walkerke/teaching-with-datavis/master/pyramids/rcharts_pyramids.R')
+require(rCharts)
 
-
-dPyramid('JA', seq(2000, 2050, 10), colors = c('black', 'red'))
-
+n <- dPyramid('JA', seq(2000, 2050, 10), colors = c('black', 'red'))
+n$params$width <- 900
+n$params$height <- 700
+n
 ```
+</div>
 
-
-<div class="footer" style="margin-top:-50px; background-color:transparent;"><SPAN STYLE="font-size:80%; font-weight:bold; font-color:black">
-公衆衛生学・王　超辰<br>2016-5-20<SPAN></div>
 
 本日の内容
 ========================================================
@@ -95,7 +85,9 @@ dPyramid('JA', seq(2000, 2050, 10), colors = c('black', 'red'))
 
 ***
 <br>
-* <big>RCT・コホート研究・症例対照研究</big>
+* <big>研究デザインまとめ</big>
+
+* <big>生存時間解析</big>
 
 * <big>meta分析</big>
 
@@ -179,6 +171,7 @@ left:40%
 
 * リスク比やオッズ比など，95%信頼区間には **1** が含まれると，統計学的に有意ではない．
 
+* 実演：`run shiny(confidence intervals)`
 
 
 検定のコンセプト
@@ -189,7 +182,7 @@ left:40%
     + 例えば、「コインを20回投げたとき回表18回が出たとしたらコインに歪みがないといえるか」という問題を考えた場合に，「コインに歪みがない」(表と裏が出る確率が等しい_p_ $=$ 0.5)という仮説にあたる．
 * 仮説を棄却するかしないかを決める基準の確率を**有意水準**と定義される．(0.05)
     + この有意水準より小さい確率を持つことは，"稀に起こること"と判断し，該当の仮説は棄却される．
-    + 例えば，「コインを20回投げたとき回表18回が出たとしたらコインに歪みがないといえるか」という問題を考えた場合に，帰無仮説が正しいなら，それが起きる確率は，$$p  = {18 \choose 20}(0.5)^{20} = 0.00018 < 0.05$$そのc("#EDFAF6")ため歪みがないという帰無仮説を棄却する．
+    + 例えば，「コインを20回投げたとき回表18回が出たとしたらコインに歪みがないといえるか」という問題を考えた場合に，帰無仮説が正しいなら，それが起きる確率は，$$p  = {18 \choose 20}(0.5)^{20} = 0.00018 < 0.05$$そのため，歪みがないという帰無仮説を棄却する．
     
 
 
@@ -202,10 +195,11 @@ kable(a, format="markdown")
 ```
 
 
+
 t 検定 (One sample)
 ========================================================
 
-例：11名女性(30-49歳)に，毎日カロリー摂取を調査したところ，推奨の毎日エネルギー量2000 calの違いを検定する．
+* 例：11名女性(30-49歳)に，毎日のエネルギー摂取を調査したところ，推奨の毎日エネルギー量2000 calの違いを検定する．
 ```{r }
 daily.intake.kJ <- c(5260, 5470, 5640, 6180, 6390, 6515, 6805, 7515, 7515, 8230, 8770)
 
@@ -216,23 +210,102 @@ t.test(daily.intake.kJ*0.239, mu=2000)#Kj->Calの変換が必要
 t 検定 (Two sample) 1
 ========================================================
 <br>
-例：22名女性の毎日エネルギー消費量(mJ)を測定したところ，肥満と痩せの２群の間に毎日エネルギー消費量は差があるかを検定する：
+* 例：22名女性の毎日エネルギー消費量(mJ)を測定したところ，肥満と痩せの２群の間に毎日エネルギー消費量は差があるかを検定する：
+<br>
 ```{r, results = 'asis', echo=F}
-library(ISwR);attach(energy)#データセットをローディング
+library(ISwR);library(rCharts);attach(energy)#データセットをローディング
 dTable(energy)
 ```
 
-t 検定 (Two sample) 2
+t 検定 (Two samples) 2
 ========================================================
 <br>
 ```{r}
 library(ISwR);attach(energy)#データセットをローディング
-t.test(expend ~ stature) # "~"の符号はstatureによりグループ分けの意味
+t.test(expend ~ stature, var.equal=TRUE) # "~"の符号はstatureによりグループ分けの意味
 #差の95%信頼区間は0を含まれないため(p < 0.05)，肥満と痩せのエネルギー消費量は統計学的に有意な違いがある．
 
 ```
 
-$$\chi^2検定 (1)$$
+
+t 検定 (Two samples)  in EZR
+========================================================
+
+<div class="midcenter" style="margin-left:-900px; margin-top:-250px;">
+<IMG SRC="figure/t00.png" style="width:400px">
+</div>
+<div class="midcenter" style="margin-left:-550px; margin-top:-250px;">
+<IMG SRC="figure/Ttwo00.png" style="width:900px">
+</div>
+
+<div class="midcenter" style="margin-left:200px; margin-top:-250px;">
+<IMG SRC="figure/Ttwo01.png" style="width:1300px">
+</div>
+
+<div class="midcenter" style="margin-left:-300px; margin-top:120px;">
+<IMG SRC="figure/Ttwo02.png" style="width:1000px">
+</div>
+
+まとめたテーブルからt 検定 (Two samples) 
+========================================================
+
+
+```{r results='asis', echo=FALSE, cache=FALSE}
+a <- read.csv("file/ttest.csv", header = TRUE, colClasses = "character")
+kable(a, format="markdown")
+```
+```{r wrap-hook}
+require(lessR) #函数をローディング
+tt.brief(n1 = 6058, m1 = 9.4, s1 = 5.1, n2 = 3049, m2 = 9.2, s2 = 5.3)
+```
+
+
+t 検定 (Paired two samples) 1
+========================================================
+<br>
+* 例：11名の女性の月経前・後のエネルギー摂取量の違いがあるかを検定する 
+<br>
+```{r results = 'asis', echo=F, cache=TRUE}
+library(ISwR);library(rCharts);attach(intake)#データセットをローディング
+
+dTable(intake)
+
+```
+
+t 検定 (Paired two samples) 2
+========================================================
+```{r}
+library(ISwR);attach(intake)#データセットをローディング
+post-pre #月経後のエネルギー摂取は月経前より低い
+t.test(pre, post, paired = TRUE) #自分の対応があるので，pairをTRUEに指定
+
+#月経前後のエネルギーの差の95%信頼区間には，0が含まれていないので，統計学的に有意な違いがある．
+```
+
+t 検定 (Paired two samples) in EZR 1 
+========================================================
+
+<div class="midcenter" style="margin-left:-900px; margin-top:-250px;">
+<IMG SRC="figure/t00.png" style="width:400px">
+</div>
+<div class="midcenter" style="margin-left:-550px; margin-top:-350px;">
+<IMG SRC="figure/t01.png" style="width:400px">
+</div>
+<div class="midcenter" style="margin-left:-150px; margin-top:-350px;">
+<IMG SRC="figure/t03.png" style="width:800px">
+</div>
+<div class="midcenter" style="margin-left: -150px; margin-top:-50px;">
+<IMG SRC="figure/t04.png" style="width:800px">
+</div>
+
+t 検定 (Paired two samples) in EZR 2 
+========================================================
+
+<div class="midcenter" style="margin-left: -550px; margin-top:-300px;">
+<IMG SRC="figure/t05.png" style="width:1300px">
+</div>
+
+$$\chi^2検定 $$
 ========================================================
 * $\chi^2$乗統計量の計算：$\chi^2 = \sum \frac{(O - E)^2}{E}$
 * 例：胃潰瘍の薬AとBの治癒率に差があるかを検定する:
@@ -244,7 +317,7 @@ addmargins(M)#観察値(O)
 addmargins(chisq.test(M)$expected)#期待値(E)
 ```
 
-$$\chi^2検定 (2)$$
+$$\chi^2検定 $$
 ========================================================
 ```{r}
 chisq.test(M, correct = FALSE) #カイ二乗検定を行う
@@ -360,7 +433,79 @@ test <- data.frame(D = D.ex, D.str = c("Healthy", "Ill")[D.ex + 1],
 
 研究デザインのまとめ
 ========================================================
-left:20%
+left:15%
 ***
 ![](figure/diagram.png)
+
+
+エビデンスの信頼性
+========================================================
+<br>
+<big>
+```{r  results='asis', echo=FALSE}
+a <- read.csv("file/evidence.csv", header = TRUE, colClasses = "character")
+kable(a, format="markdown")
+```
+</big>
+
+例：胃潰瘍の薬AとBの治癒率の違いを定量化する 1
+========================================================
+<big>
+```{r, cache=TRUE, echo=FALSE}
+M <- matrix(c(23, 7, 18, 13), 2 ,2)#データ入力
+colnames(M) <- c("治癒","未治癒")#列の名前
+rownames(M) <- c("薬A","薬B")#行の名前
+addmargins(M)#観察値(O)
+```
+</big>
+
+* **指標**
+    + リスク：割合
+        + 薬A群リスク(治癒の割合): $p_1 = 23 \div 41$ `r 23/41`
+        + 薬B群リスク(治癒の割合): $p_2 = 7 \div 20$ `r 7/20`
+    + リスク差: Risk Difference $=$ $p_1 - p_2 =$ `r 23/41-7/20`
+
+
+例：胃潰瘍の薬AとBの治癒率の違いを定量化する 2
+========================================================
+<big>
+```{r, cache=TRUE, echo=FALSE}
+M <- matrix(c(23, 7, 18, 13), 2 ,2)#データ入力
+colnames(M) <- c("治癒","未治癒")#列の名前
+rownames(M) <- c("薬A","薬B")#行の名前
+addmargins(M)#観察値(O)
+```
+</big>
+
+* **指標**
+    + リスク比: Risk Ratio (RR) $=$ $p_1 \div p_2 =$ `r (23/41)/(7/20)`
+    + オッズ比: Odds Ratio (OR) $= (23 \div 18) \div (7 \div 13) = (23 \times 13) \div (7 \times 18)　=$ `r 23*13/7/18`
+
+例：胃潰瘍の薬AとBの治癒率の違いを定量化する 3
+========================================================
+```{r, cache=TRUE, echo=FALSE, cache=TRUE}
+library(RcmdrPlugin.EZR) #EZRのパッケージをローディング
+M <- matrix(c(23, 7, 18, 13), 2 ,2)#データ入力
+colnames(M) <- c("治癒","未治癒")#列の名前
+rownames(M) <- c("薬A","薬B")#行の名前
+addmargins(M)#観察値(O)
+```
+```{r}
+prop.diff.conf(23, 41, 7, 20, 95) #リスク差の点推定値と信頼区間
+prop.ratio.conf(23, 41, 7, 20, 95) #リスク比の点推定値と信頼区間
+```
+
+
+例：胃潰瘍の薬AとBの治癒率の違いを定量化する 4
+========================================================
+```{r, cache=TRUE, echo=FALSE, cache=TRUE}
+library(RcmdrPlugin.EZR) #EZRのパッケージをローディング
+M <- matrix(c(23, 7, 18, 13), 2 ,2)#データ入力
+colnames(M) <- c("治癒","未治癒")#列の名前
+rownames(M) <- c("薬A","薬B")#行の名前
+addmargins(M)#観察値(O)
+```
+```{r}
+fisher.test(M) #オッズ比の点推定と信頼区間
+```
 
