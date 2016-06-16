@@ -56,8 +56,8 @@ date:
 transition: fade
 transition-speed: fast
 font-import: http://fonts.googleapis.com/earlyaccess/notosansjapanese.css
-width: 1600
-height: 900
+width: 2000
+height: 1000
 css: solarized.css
 
 <div class="gra">
@@ -89,7 +89,7 @@ n
 
 * <big>生存時間解析</big>
 
-* <big>meta分析</big>
+* <big>メタアナリシス</big>
 
 
 
@@ -250,9 +250,9 @@ t 検定 (Two samples)  in EZR
 ========================================================
 
 
-```{r results='asis', echo=FALSE, cache=FALSE}
+```{r echo=FALSE, cache=FALSE}
 a <- read.csv("file/ttest.csv", header = TRUE, colClasses = "character")
-kable(a, format="markdown")
+a
 ```
 ```{r wrap-hook}
 require(lessR) #函数をローディング
@@ -265,12 +265,15 @@ t 検定 (Paired two samples) 1
 <br>
 * 例：11名の女性の月経前・後のエネルギー摂取量の違いがあるかを検定する 
 <br>
+
+<div class="gra">
 ```{r results = 'asis', echo=F, cache=TRUE}
 library(ISwR);library(rCharts);attach(intake)#データセットをローディング
 
 dTable(intake)
 
 ```
+</div>
 
 t 検定 (Paired two samples) 2
 ========================================================
@@ -307,7 +310,7 @@ t 検定 (Paired two samples) in EZR 2
 
 $$\chi^2検定 $$
 ========================================================
-* $\chi^2$乗統計量の計算：$\chi^2 = \sum \frac{(O - E)^2}{E}$
+* $\chi^2$統計量の計算：$\chi^2 = \sum \frac{(O - E)^2}{E}$
 * 例：胃潰瘍の薬AとBの治癒率に差があるかを検定する:
 ```{r, cache=TRUE}
 M <- matrix(c(23, 7, 18, 13), 2 ,2)#データ入力
@@ -333,18 +336,21 @@ O <- chisq.test(M)$observed#観察値
 
 診断検査法の研究
 ========================================================
-
+<br>
+<br>
 * 感度(Sn)・特異度(Sp)の推定  
 * 尤度比の推定
     + 陽性尤度比 (LR$+$):  
   LR$+$ $=$ Sn $\div$ (1 $-$ Sp)
     + 陰性尤度比 (LR$-$):  
   LR$-$ $=$ (1 $-$ Sn) $\div$ Sp
+* 検査結果の使い方
+    + 検査前オッズ $\times$ 尤度比 $=$ 検査後オッズ
 * ROC曲線
     + 作成
     + 曲線下面積(AUC)の推定
-    
-<div class="midcenter" style="margin-left:-100px; margin-top:-350px;">
+
+<div class="midcenter" style="margin-left:-100px; margin-top:-250px;">
 <IMG SRC="figure/roc.png" style="width:1000px">
 </div>
 
@@ -368,6 +374,25 @@ EZRでの操作
 ②<br>
 <IMG SRC="figure/Sensitivity01.png" style="width:600px">
 </large>
+
+検査後確率の計算
+========================================================
+
+* 検査前確率 $\times$ **尤度比** $=$ 検査後確率
+* 検査前確率: 
+    + 普通は有病率(病気である確率)
+    + 臨床現場により異なる
+    + 先行研究に参考する
+* 確率とオッズの変換:
+    + 確率(Probability, p) vs. オッズ(Odds)  
+    $$odds = \frac{p}{(1-p)}$$
+    $$p = \frac{odds}{(1+odds)}$$
+* (陽性)尤度比の計算: 
+    $$LR+ = \frac{\frac{a}{a+c}}{\frac{b}{b+d}}$$ 
+
+<div class="midcenter" style="margin-left:-100px; margin-top:-250px;">
+<IMG SRC="figure/LR.png" style="width:1000px">
+</div>
 
 ROC曲線とは
 ========================================================
@@ -448,64 +473,308 @@ kable(a, format="markdown")
 ```
 </big>
 
-例：胃潰瘍の薬AとBの治癒率の違いを定量化する 1
+
+
+
+例：薬とプラセボの治癒率の違いの定量化 1
 ========================================================
+<br>
 <big>
 ```{r, cache=TRUE, echo=FALSE}
 M <- matrix(c(23, 7, 18, 13), 2 ,2)#データ入力
 colnames(M) <- c("治癒","未治癒")#列の名前
-rownames(M) <- c("薬A","薬B")#行の名前
+rownames(M) <- c("薬","プラセボ")#行の名前
 addmargins(M)#観察値(O)
 ```
 </big>
 
-* **指標**
-    + リスク：割合
-        + 薬A群リスク(治癒の割合): $p_1 = 23 \div 41$ `r 23/41`
-        + 薬B群リスク(治癒の割合): $p_2 = 7 \div 20$ `r 7/20`
-    + リスク差: Risk Difference $=$ $p_1 - p_2 =$ `r 23/41-7/20`
+* <big>**指標**</big>
+
+* <big>リスク：割合</big>
+    + 薬群リスク(治癒の割合): $p_1 = 23 \div 41 =$ `r 23/41`
+    + プラセボ群リスク(治癒の割合): $p_2 = 7 \div 20 =$ `r 7/20`
+* <big>リスク差: Risk Difference $=$ $p_1 - p_2 =$ `r 23/41-7/20`</big> 
 
 
-例：胃潰瘍の薬AとBの治癒率の違いを定量化する 2
+
+例：薬とプラセボの治癒率の違いの定量化 2
 ========================================================
+<br>
 <big>
 ```{r, cache=TRUE, echo=FALSE}
 M <- matrix(c(23, 7, 18, 13), 2 ,2)#データ入力
 colnames(M) <- c("治癒","未治癒")#列の名前
-rownames(M) <- c("薬A","薬B")#行の名前
+rownames(M) <- c("薬","プラセボ")#行の名前
 addmargins(M)#観察値(O)
 ```
 </big>
+<br>
 
-* **指標**
-    + リスク比: Risk Ratio (RR) $=$ $p_1 \div p_2 =$ `r (23/41)/(7/20)`
-    + オッズ比: Odds Ratio (OR) $= (23 \div 18) \div (7 \div 13) = (23 \times 13) \div (7 \times 18)　=$ `r 23*13/7/18`
+* <big>**指標**</big>
+* <big>リスク比: Risk Ratio (RR) $=$ $p_1 \div p_2 =$ `r</big> (23/41)/(7/20)`</big>  
+* <big>オッズ比: Odds Ratio (OR) $= \frac{(23 \div 18)}{(7 \div 13)} = \frac{(23 \times 13)}{(7 \times 18)}　=$ `r (23*13)/(7*18)`</big>
 
-例：胃潰瘍の薬AとBの治癒率の違いを定量化する 3
+
+例：薬とプラセボの治癒率の違いの定量化 3
 ========================================================
+<br>
+<big>
 ```{r, cache=TRUE, echo=FALSE, cache=TRUE}
 library(RcmdrPlugin.EZR) #EZRのパッケージをローディング
 M <- matrix(c(23, 7, 18, 13), 2 ,2)#データ入力
 colnames(M) <- c("治癒","未治癒")#列の名前
-rownames(M) <- c("薬A","薬B")#行の名前
+rownames(M) <- c("薬","プラセボ")#行の名前
 addmargins(M)#観察値(O)
 ```
 ```{r}
 prop.diff.conf(23, 41, 7, 20, 95) #リスク差の点推定値と信頼区間
 prop.ratio.conf(23, 41, 7, 20, 95) #リスク比の点推定値と信頼区間
 ```
+</big>
 
-
-例：胃潰瘍の薬AとBの治癒率の違いを定量化する 4
+例：薬とプラセボの治癒率の違いの定量化 4
 ========================================================
-```{r, cache=TRUE, echo=FALSE, cache=TRUE}
+<br>
+<big>
+```{r, echo=FALSE, cache=TRUE}
 library(RcmdrPlugin.EZR) #EZRのパッケージをローディング
 M <- matrix(c(23, 7, 18, 13), 2 ,2)#データ入力
 colnames(M) <- c("治癒","未治癒")#列の名前
-rownames(M) <- c("薬A","薬B")#行の名前
+rownames(M) <- c("薬","プラセボ")#行の名前
 addmargins(M)#観察値(O)
 ```
-```{r}
-fisher.test(M) #オッズ比の点推定と信頼区間
+```{r echo=FALSE}
+fisher.test(M,alternative = "two.sided",
+            conf.int = TRUE, conf.level = 0.95) #オッズ比の点推定と信頼区間
+```
+</big>
+
+
+
+相対危険度・寄与危険度
+========================================================
+
+<br>
+<br>
+* 曝露群が病気となるリスクは $\frac{a}{a + b}$
+* 非曝露群のリスクは $\frac{c}{c + d}$
+* **相対危険度 relative risk (RR)**は:  $\frac{\frac{a}{a + b}}{\frac{c}{c + d}}$ 
+* **寄与危険度 attributable risk**は: 曝露群と非暴露群のリスクの差  $\frac{a}{a + b} - \frac{c}{c + d}$
+* 曝露群の罹患率のうち，その曝露が原因となっている割合は**寄与危険度割合**:  
+<br>
+    $\frac{\frac{a}{a + b} - \frac{c}{c + d}}{\frac{a}{a + b}} = 1 - \frac{\frac{c}{c + d}}{\frac{a}{a + b}} = 1 - \frac{1}{RR} = \frac{RR - 1}{RR}$
+
+<div class="midcenter" style="margin-left:-100px; margin-top:-250px;">
+<IMG SRC="figure/rr.png" style="width:1000px">
+</div>
+
+
+コホート研究-生存時間解析
+========================================================
+
+* 前向き研究であり，観察時間の経過とともにアウトカム(罹患・死亡)はどれくらい生じるか？
+* その観測結果の定量化は，**生存曲線 Kaplan-Meier法**を使う．
+    + 横軸に時間，縦軸に「まだアウトカムが起こっていない割合」をとった曲線．
+
+<div class="midcenter" style="margin-left: -550px; margin-top:-200px;">
+<IMG SRC="figure/km.png" style="width:1000px">
+</div>
+
+
+例：脳卒中死亡リスクのデータ
+========================================================
+<br>
+<div class = "gra">
+```{r results='asis', echo=FALSE, cache=FALSE}
+library(rCharts);library(ISwR); attach(stroke); 
+stroke$died <- format(as.Date(stroke$died),format = "%Y-%m-%d") 
+stroke$dstr <- format(as.Date(stroke$dstr),format = "%Y-%m-%d") 
+dTable(stroke)
+```
+</div>
+
+
+
+例：脳卒中死亡リスクのデータ-生存率の計算 
+========================================================
+```{r cache=TRUE}
+library(ISwR);library(survival);attach(stroke)#データセットをローディング
+Surv.stroke <- survfit(Surv(obsmonths, dead) ~ 1)
+summary(Surv.stroke)
 ```
 
+例：脳卒中死亡リスクのデータ-生存曲線 
+========================================================
+```{r echo=FALSE, warning=FALSE, fig.align='center', fig.width=15, fig.height=12}
+library(ISwR, pos=18)
+data(stroke, package="ISwR")
+require("ggplot2")
+.df <- na.omit(data.frame(x = stroke$obsmonths, y = stroke$dead, z = factor("At risk")))
+.df <- .df[do.call(order, .df[, c("z", "x"), drop = FALSE]), , drop = FALSE]
+.fit <- survival::survfit(survival::Surv(time = x, event = y, type = "right") ~ z, .df)
+.fit <- data.frame(x = .fit$time, y = .fit$surv, nrisk = .fit$n.risk, nevent = .fit$n.event, 
+  ncensor= .fit$n.censor, upper = .fit$upper, lower = .fit$lower)
+.df <- .df[!duplicated(.df[,c("x", "z")]), ]
+.df <- .fit <- data.frame(.fit, .df[, c("z"), drop = FALSE])
+.med <- plyr::ddply(.fit, plyr::.(z), function(x) {
+data.frame(
+ median = min(subset(x, y < (0.5 + .Machine$double.eps^0.5))$x)
+)})
+.df <- .fit <- rbind(unique(data.frame(x = 0, y = 1, nrisk = NA, nevent = NA, ncensor = NA, 
+  upper = 1, lower = 1, .df[, c("z"), drop = FALSE])), .fit)
+.cens <- subset(.fit, ncensor == 1)
+.tmp1 <- data.frame(as.table(by(.df, .df[, c("z"), drop = FALSE], function(d) max(d$nrisk, 
+  na.rm = TRUE))))
+.tmp1$x <- 0
+.nrisk <- .tmp1
+for (i in 1:5) {.df <- subset(.fit, x < 10 * i); .tmp2 <- data.frame(as.table(by(.df, .df[, 
+  c("z"), drop = FALSE], function(d) if (all(is.na(d$nrisk))) NA else min(d$nrisk - d$nevent - 
+  d$ncensor, na.rm = TRUE)))); .tmp2$x <- 10 * i; .tmp2$Freq[is.na(.tmp2$Freq)] <- 
+  .tmp1$Freq[is.na(.tmp2$Freq)]; .tmp1 <- .tmp2; .nrisk <- rbind(.nrisk, .tmp2)}
+.nrisk$y <- rep(seq(0.025, 0.025, -0.05), 6)
+.plot <- ggplot(data = .fit, aes(x = x, y = y, colour = z)) + geom_step(data = subset(.fit, 
+  !is.na(upper)), aes(y = upper), size = 1, lty = 2, alpha = 0.5, show.legend = FALSE, na.rm = 
+  FALSE) + geom_step(data = subset(.fit, !is.na(lower)), aes(y = lower), size = 1, lty = 2, 
+  alpha = 0.5, show.legend = FALSE, na.rm = FALSE) + RcmdrPlugin.KMggplot2::geom_stepribbon(data 
+  = .fit, aes(x = x, ymin = lower, ymax = upper, fill = z), alpha = 0.25, colour = "transparent",
+   show.legend = FALSE, kmplot = TRUE) + geom_step(size = 1.5) + geom_point(data = .cens, aes(x 
+  = x, y = y, colour = z), size = 3.5) + geom_point(data = .cens, aes(x = x, y = y), size = 2, 
+  color = "white") + geom_text(data = .nrisk, aes(y = y, x = x, label = Freq, colour = z), 
+  show.legend = FALSE, size = 28 * 0.282, family = "Japan1HeiMin") + geom_vline(data = .med, 
+  aes(xintercept = median), colour = "black", lty = 2) + scale_x_continuous(breaks = seq(0, 50, 
+  by = 10), limits = c(0, 50)) + scale_y_continuous(limits = c(0, 1), expand = c(0.01, 0)) + 
+  scale_colour_brewer(palette = "RdBu") + scale_fill_brewer(palette = "RdBu") + xlab("追跡時間(月)") + ylab("生存率") + labs(title = "脳卒中の生存曲線") + theme_bw(base_size = 35, base_family = 
+  "Japan1HeiMin") + theme(legend.position = "none")
+print(.plot)
+rm(.df, .fit, .pmed, .med, .cens, .tmp1, .tmp2, .nrisk, .plot)
+
+```
+
+例：脳卒中死亡リスクのデータ-生存曲線男女別 
+========================================================
+<br>
+```{r  echo=FALSE, warning=FALSE, fig.align='center', fig.width=15, fig.height=12}
+
+library(ISwR, pos=18)
+data(stroke, package="ISwR")
+require("ggplot2")
+.df <- na.omit(data.frame(x = stroke$obsmonths, y = stroke$dead, z = stroke$sex))
+.df <- .df[do.call(order, .df[, c("z", "x"), drop = FALSE]), , drop = FALSE]
+.fit <- survival::survfit(survival::Surv(time = x, event = y, type = "right") ~ z, .df)
+.pval <- plyr::ddply(.df, plyr::.(),
+ function(x) {
+  data.frame(
+   x = 0, y = 0.25, df = 1,
+   chisq = survival::survdiff(
+    survival::Surv(time = x, event = y, type = "right") ~ z, x
+   )$chisq
+)})
+.pval$label <- paste0(
+  "paste(italic(p), \" = ",
+  signif(1 - pchisq(.pval$chisq, .pval$df), 3),
+  "\")"
+)
+.fit <- data.frame(x = .fit$time, y = .fit$surv, nrisk = .fit$n.risk, nevent = .fit$n.event, 
+  ncensor= .fit$n.censor, upper = .fit$upper, lower = .fit$lower)
+.df <- .df[!duplicated(.df[,c("x", "z")]), ]
+.df <- .fit <- data.frame(.fit, .df[, c("z"), drop = FALSE])
+.df <- .fit <- rbind(unique(data.frame(x = 0, y = 1, nrisk = NA, nevent = NA, ncensor = NA, 
+  upper = 1, lower = 1, .df[, c("z"), drop = FALSE])), .fit)
+.cens <- subset(.fit, ncensor == 1)
+.tmp1 <- data.frame(as.table(by(.df, .df[, c("z"), drop = FALSE], function(d) max(d$nrisk, 
+  na.rm = TRUE))))
+.tmp1$x <- 0
+.nrisk <- .tmp1
+for (i in 1:5) {.df <- subset(.fit, x < 10 * i); .tmp2 <- data.frame(as.table(by(.df, .df[, 
+  c("z"), drop = FALSE], function(d) if (all(is.na(d$nrisk))) NA else min(d$nrisk - d$nevent - 
+  d$ncensor, na.rm = TRUE)))); .tmp2$x <- 10 * i; .tmp2$Freq[is.na(.tmp2$Freq)] <- 
+  .tmp1$Freq[is.na(.tmp2$Freq)]; .tmp1 <- .tmp2; .nrisk <- rbind(.nrisk, .tmp2)}
+.nrisk$y <- rep(seq(0.075, 0.025, -0.05), 6)
+.plot <- ggplot(data = .fit, aes(x = x, y = y, colour = z)) + geom_step(data = subset(.fit, 
+  !is.na(upper)), aes(y = upper), size = 1, lty = 2, alpha = 0.5, show.legend = FALSE, na.rm = 
+  FALSE) + geom_step(data = subset(.fit, !is.na(lower)), aes(y = lower), size = 1, lty = 2, 
+  alpha = 0.5, show.legend = FALSE, na.rm = FALSE) + RcmdrPlugin.KMggplot2::geom_stepribbon(data 
+  = .fit, aes(x = x, ymin = lower, ymax = upper, fill = z), alpha = 0.25, colour = "transparent",
+   show.legend = FALSE, kmplot = TRUE) + geom_step(size = 1.5) + geom_point(data = .cens, aes(x 
+  = x, y = y, colour = z), size = 3.5) + geom_point(data = .cens, aes(x = x, y = y), size = 2, 
+  color = "white") + geom_text(data = .nrisk, aes(y = y, x = x, label = Freq, colour = z), 
+  show.legend = FALSE, size = 26 * 0.282, family = "Japan1HeiMin") + geom_text(data = .pval, 
+  aes(y = y, x = x, label = label), colour = "black", hjust = 0, vjust = -0.5, parse = TRUE, 
+  show.legend = FALSE, size = 26 * 0.282, family = "Japan1HeiMin") + scale_x_continuous(breaks = 
+  seq(0, 50, by = 10), limits = c(0, 50)) + scale_y_continuous(limits = c(0, 1), expand = c(0.01,
+   0)) + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + 
+  xlab("追跡時間 (月)") + ylab("生存率") + labs(colour = "性別") + labs(title = "男女別脳卒中後生存曲線") + 
+  theme_bw(base_size = 36, base_family = "Japan1HeiMin") + theme(legend.position = "right")
+print(.plot)
+rm(.df, .fit, .pval, .ppval, .cens, .tmp1, .tmp2, .nrisk, .plot)
+
+```
+
+
+例：生存曲線の比較検定 logrank 検定
+========================================================
+<br>
+<big>
+```{r }
+library(survival)
+survdiff(Surv(obsmonths, dead) ~ sex) #logrank検定の函数
+```
+</big>
+
+
+
+メタアナリシス (meta-analysis)
+========================================================
+<br>
+<big>
+* 系統的レビュー(systematic review)の一部: 
+    + ある臨床疑問に対して，今まで行われた**すべて**のエビデンスを収集し
+    + その中で，**妥当**なものを選んで，統計学的な手法を利用して，一つの結論(数値)にまとめたもの．
+</big>
+
+例：メタアナリシス (meta-analysis) 1
+========================================================
+<br>
+<br>
+チフスに対する新しいワクチンを開発し，いくつかの異なる集団において，同じワクチンの有効性を検査して，メタ解析を行う．
+```{r results='asis', echo=FALSE, cache=FALSE}
+library(rCharts)
+vaccin <- read.table("http://minato.sip21c.org/Pearson1.txt", header = TRUE, sep="", na.strings = c("", NA), dec = ".", fill = TRUE, strip.white = TRUE)
+dTable(vaccin)
+```
+
+例：メタアナリシス・検定結果 2
+========================================================
+<br>
+```{r, cache=TRUE, echo=FALSE}
+vaccin <- read.table("http://minato.sip21c.org/Pearson1.txt", header = TRUE, sep="", na.strings = c("", NA), dec = ".", fill = TRUE, strip.white = TRUE)
+#####Metaanalysis and metaregression for proportions#####
+TempDF <- vaccin[complete.cases(vaccin$DiedNV, vaccin$TotalNV, vaccin$DiedV, vaccin$TotalV),]
+library(meta, pos=21)
+res <- metabin(DiedNV, TotalNV, DiedV, TotalV, data=TempDF, sm="OR", studlab=StudyName, comb.fixed=TRUE, comb.random=TRUE)
+res
+```
+
+例：メタアナリシス・Forest-plot 3
+========================================================
+
+<div class="midcenter" style="margin-left: -900px; margin-top:-350px;">
+<IMG SRC="figure/forest.png" style="width:1900px">
+</div>
+
+
+
+例：メタアナリシス・Funnel-plot 4
+========================================================
+<div class="midcenter" style="margin-left: -700px; margin-top:-350px;">
+<IMG SRC="figure/funnel.png" style="width:1500px; height: 800px">
+</div>
+
+例：メタアナリシス・出版バイアス 5
+========================================================
+<br>
+<big>
+```{r cache=TRUE}
+metabias(res, k.min = 5)
+```
+</big>

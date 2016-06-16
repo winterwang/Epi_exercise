@@ -9,3 +9,5 @@ RcmdrPlugin.EZR
 ggplot2
 plotROC
 lessR
+survival
+meta

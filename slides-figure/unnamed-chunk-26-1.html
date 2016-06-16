@@ -1,0 +1,135 @@
+<!doctype HTML>
+<meta charset = 'utf-8'>
+<html>
+  <head>
+    <link rel='stylesheet' href='http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css'>
+    
+    <script src='http://code.jquery.com/jquery-1.10.2.min.js' type='text/javascript'></script>
+    <script src='http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js' type='text/javascript'></script>
+    
+    <style>
+    .rChart {
+      display: block;
+      margin-left: auto; 
+      margin-right: auto;
+      width: 800px;
+      height: 400px;
+    }  
+    </style>
+    
+  </head>
+  <body >
+    
+    <table id = 'chart429178b9655f' class = 'rChart datatables'></table>    
+    <script type="text/javascript" charset="utf-8">
+  var chartParamschart429178b9655f = {
+ "dom": "chart429178b9655f",
+"width":    800,
+"height":    400,
+"table": {
+ "aaData": [
+ [
+ "HospitalSA",
+30,
+2,
+32,
+63,
+12,
+75 
+],
+[
+ "GarrisonLadysmith",
+27,
+8,
+35,
+1160,
+329,
+1489 
+],
+[
+ "SpecialRegimenSA",
+63,
+9,
+72,
+61,
+21,
+82 
+],
+[
+ "SpecialHospitalSA",
+1088,
+86,
+1174,
+4453,
+538,
+4991 
+],
+[
+ "MilitaryHospitalSA",
+701,
+63,
+764,
+2864,
+510,
+3374 
+],
+[
+ "IndianArmy",
+73,
+11,
+84,
+1052,
+423,
+1475 
+] 
+],
+"aoColumns": [
+ {
+ "sTitle": "StudyName" 
+},
+{
+ "sTitle": "RecovV" 
+},
+{
+ "sTitle": "DiedV" 
+},
+{
+ "sTitle": "TotalV" 
+},
+{
+ "sTitle": "RecovNV" 
+},
+{
+ "sTitle": "DiedNV" 
+},
+{
+ "sTitle": "TotalNV" 
+} 
+] 
+},
+"id": "chart429178b9655f" 
+}
+  $('#' + chartParamschart429178b9655f.id).removeClass("rChart")
+
+  $(document).ready(function() {
+		drawDataTable(chartParamschart429178b9655f)
+	});
+  function drawDataTable(chartParams){
+    var dTable = $('#' + chartParams.dom).dataTable(
+      chartParams.table
+    );
+    //first use rCharts width
+  	$('#'+chartParams.id+"_wrapper").css("width",chartParams.width)  
+		$('#'+chartParams.id+"_wrapper").css("width",chartParams.table.width)
+    
+    //then if specified change to table width
+    $('#'+chartParams.id+"_wrapper").css("margin-left", "auto");
+    $('#'+chartParams.id+"_wrapper").css("margin-right", "auto");
+		dTable.fnAdjustColumnSizing();
+  }
+		
+</script>
+    
+    <script></script>    
+  </body>
+</html>
