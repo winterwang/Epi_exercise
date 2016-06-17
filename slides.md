@@ -9,14 +9,14 @@
 .reveal h3 {
   font-size: 90px;
 }
-.reveal table {
   border-width: 1px;
   border-spacing: 2px;
   border-style: line;
   border-color: gray;
   border-collapse: collapse;
   font-size: 0.85em;
-}
+
+.reveal table {}
 
 /* heading for slides with two hashes ## */
 .reveal .slides section .slideContent h2 {
@@ -61,7 +61,7 @@ height: 1000
 css: solarized.css
 
 <div class="gra">
-<iframe src=' slides-figure/unnamed-chunk-1-1.html ' scrolling='no' frameBorder='0' seamless class='rChart dimple ' id=iframe- chart4291e5a455b ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
+<iframe src=' slides-figure/unnamed-chunk-1-1.html ' scrolling='no' frameBorder='0' seamless class='rChart dimple ' id=iframe- chart438962dc1b2e ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
 </div>
 
 
@@ -69,19 +69,26 @@ css: solarized.css
 ========================================================
 
 <br>
-* <big>記述統計学の復習</big>
+<br>
+<br>
+* <big>統計学の基本</big>
     + データの種類と要約のまとめ
-* <big>推測統計学の復習</big>
     + 推定・検定
-* <big>診断検査法の研究</big>
-
+    + 信頼区間の理解
+    + t 検定と$\chi^2$検定
+       
 ***
 <br>
-* <big>研究デザインまとめ</big>
+<br>
+<br>
+* <big>臨床・疫学研究</big>
+    + 診断検査法の研究
+        + 感度・特異度・検査後確率
+        + ROC曲線
+    + 生存時間解析
+    + メタアナリシス
 
-* <big>生存時間解析</big>
-
-* <big>メタアナリシス</big>
+* <big>RとEZRでデータ解析の実現</big>
 
 
 
@@ -90,11 +97,11 @@ css: solarized.css
 ========================================================
 <big>質的変数--数字で測れない</big>
 * カテゴリへ分類できる変数
-    + ***順序ない***
+    + **順序ない**
         - 例：性別(男・女); 人種(黒人・白人・黄色人種)
-    + ***順序ある***
+    + **順序ある**
         - 例：１年生・２年生; 満足度(悪い・普通・良い)
-* ***表を作る***
+* **表を作る**
     + 2重分割表
 
 ***
@@ -113,7 +120,7 @@ css: solarized.css
 1. 中心を表す量：
     + 平均値 (mean)；中央値(median)；最頻値(mode)
 
-        <small>library(ShinyIntroStats) -> intro_stats_shinyapps() [3]</small>
+        <small>実演: library(ShinyIntroStats) -> intro_stats_shinyapps() [3]</small>
 
 2. バラツキを表す量：
     + 標準偏差(sd)；四分位範囲(IQR)
@@ -224,7 +231,7 @@ t 検定 (Two sample) 1
 <br>
 * 例：22名女性の毎日エネルギー消費量(mJ)を測定したところ，肥満と痩せの２群の間に毎日エネルギー消費量は差があるかを検定する：
 <br>
-<iframe src=' slides-figure/unnamed-chunk-4-1.html ' scrolling='no' frameBorder='0' seamless class='rChart datatables ' id=iframe- chart42915c45cd41 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
+<iframe src=' slides-figure/unnamed-chunk-4-1.html ' scrolling='no' frameBorder='0' seamless class='rChart datatables ' id=iframe- chart43891fab6143 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
 
 t 検定 (Two samples) 2
 ========================================================
@@ -514,15 +521,18 @@ EZRでの操作
 検査後確率の計算
 ========================================================
 
-* 検査前確率 $\times$ **尤度比** $=$ 検査後確率
-* 検査前確率: 
-    + 普通は有病率(病気である確率)
-    + 臨床現場により異なる
-    + 先行研究に参考する
+* 検査前オッズ $\times$ **尤度比** $=$ 検査後オッズ
+
 * 確率とオッズの変換:
     + 確率(Probability, p) vs. オッズ(Odds)  
     $$odds = \frac{p}{(1-p)}$$
     $$p = \frac{odds}{(1+odds)}$$
+
+* 検査前確率: 
+    + 普通は有病率(病気である確率)
+    + 臨床現場により異なる
+    + 先行研究に参考する
+    
 * (陽性)尤度比の計算: 
     $$LR+ = \frac{\frac{a}{a+c}}{\frac{b}{b+d}}$$ 
 
@@ -539,7 +549,7 @@ left: 40%
 * **Snを$y$座標**に，**1 $-$ Spを$x$座標**にとったプロットしたグラフ．
 * AUC(Area Under the roc Curve)曲線下面積が大きいほど良い検査法．
 
-  <small>`library(plotROC); shiny_plotROC()`</small>
+  <small>`実演：library(plotROC); shiny_plotROC()`</small>
 
 
 ***
@@ -629,7 +639,7 @@ Sum        30     31  61
 <br>
 
 * <big>**指標**</big>
-* <big>リスク比: Risk Ratio (RR) $=$ $p_1 \div p_2 =$ `r</big> (23/41)/(7/20)`</big>  
+* <big>リスク比: Risk Ratio (RR) $=$ $p_1 \div p_2 =$ 1.6027875</big>  
 * <big>オッズ比: Odds Ratio (OR) $= \frac{(23 \div 18)}{(7 \div 13)} = \frac{(23 \times 13)}{(7 \times 18)}　=$ 2.3730159</big>
 
 
@@ -727,7 +737,7 @@ odds ratio
 ========================================================
 <br>
 <div class = "gra">
-<iframe src=' slides-figure/unnamed-chunk-21-1.html ' scrolling='no' frameBorder='0' seamless class='rChart datatables ' id=iframe- chart4291ca0277b ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
+<iframe src=' slides-figure/unnamed-chunk-21-1.html ' scrolling='no' frameBorder='0' seamless class='rChart datatables ' id=iframe- chart43894d72c1ed ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
 </div>
 
 
@@ -1010,18 +1020,21 @@ sex=Male   319      164      205      8.32      14.6
 メタアナリシス (meta-analysis)
 ========================================================
 <br>
-<big>
-* 系統的レビュー(systematic review)の一部: 
-    + ある臨床疑問に対して，今まで行われた**すべて**のエビデンスを収集し
-    + その中で，**妥当**なものを選んで，統計学的な手法を利用して，一つの結論(数値)にまとめたもの．
-</big>
+
+* <big>系統的レビュー(systematic review)の一部: </big>
+
+    + <big>ある臨床疑問に対して，今まで行われた**すべて**のエビデンスを収集し</big>
+    + <big>その中で，**妥当**なものを選んで，統計学的な手法を利用して，一つの結論(数値)にまとめたもの．</big>
+
 
 例：メタアナリシス (meta-analysis) 1
 ========================================================
 <br>
 <br>
-チフスに対する新しいワクチンを開発し，いくつかの異なる集団において，同じワクチンの有効性を検査して，メタ解析を行う．
-<iframe src=' slides-figure/unnamed-chunk-26-1.html ' scrolling='no' frameBorder='0' seamless class='rChart datatables ' id=iframe- chart429178b9655f ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
+<big>
+チフスに対する新しいワクチンを開発し，いくつかの異なる集団において，同じワクチンの有効性を検査して，メタ解析を行う．</big>
+
+<iframe src=' slides-figure/unnamed-chunk-26-1.html ' scrolling='no' frameBorder='0' seamless class='rChart datatables ' id=iframe- chart43894ef34c1b ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
 
 例：メタアナリシス・検定結果 2
 ========================================================
@@ -1090,3 +1103,116 @@ sample estimates:
 0.4428032 0.8590997 0.4306045 
 ```
 </big>
+
+
+
+例：メタアナリシスをEZRで実現_datainput 1
+========================================================
+
+<div class="midcenter" style="margin-left: -900px; margin-top:-350px;">
+<IMG SRC="figure/datainput00.png" style="width:1100px; height: 860px">
+</div>
+<div class="midcenter" style="margin-left: 30px; margin-top:-350px;">
+<IMG SRC="figure/datainput01.png" style="width:700px; height: px">
+</div>
+
+
+
+例：メタアナリシスをEZRで実現_datainput 2
+========================================================
+<div class="midcenter" style="margin-left: -900px; margin-top: 0px;">
+<IMG SRC="figure/datainput02.png" style="width:700px; height: 400px">
+</div>
+
+<div class="midcenter" style="margin-left: -100px; margin-top: -350px;">
+<IMG SRC="figure/datainput03.png" style="width:900px; height: px">
+</div>
+
+
+例：メタアナリシスをEZRで実現_解析操作 1
+========================================================
+<div class="midcenter" style="margin-left: -900px; margin-top: 0px;">
+<IMG SRC="figure/meta00.png" style="width:700px; height: 400px">
+</div>
+
+<div class="midcenter" style="margin-left: -100px; margin-top: -400px;">
+<IMG SRC="figure/meta01.png" style="width:900px; height: px">
+</div>
+
+例：メタアナリシスをEZRで実現_解析操作 2
+========================================================
+<div class="midcenter" style="margin-left: -400px; margin-top: -400px;">
+<IMG SRC="figure/meta05.png" style="width:900px; height: px">
+</div>
+
+
+最後に
+========================================================
+<div class="midcenter" style="margin-left: -900px; margin-top: -400px;">
+<IMG SRC="figure/R_EZR.png" style="width:1900px; height: px">
+</div>
+
+
+本講義中使用したデモデータを導入 1
+========================================================
+<div class="midcenter" style="margin-left: -900px; margin-top: -400px;">
+<IMG SRC="figure/R_EZR00.png" style="width:1900px; height: px">
+</div>
+
+
+本講義中使用したデモデータの導入 2
+========================================================
+<div class="midcenter" style="margin-left: -700px; margin-top: -400px;">
+<IMG SRC="figure/R_EZR01.png" style="width:1600px; height: px">
+</div>
+
+本講義中使用したデモデータの導入 3
+========================================================
+<div class="midcenter" style="margin-left: -700px; margin-top: -400px;">
+<IMG SRC="figure/R_EZR02.png" style="width:1300px; height: px">
+</div>
+
+本講義中使用したデモデータの導入 4
+========================================================
+<div class="midcenter" style="margin-left: -900px; margin-top: 0px;">
+<IMG SRC="figure/R_EZR03.png" style="width:700px; height: 400px">
+</div>
+
+<div class="midcenter" style="margin-left: -100px; margin-top: -400px;">
+<IMG SRC="figure/R_EZR04.png" style="width:900px; height: px">
+</div>
+
+
+本講義中使用したデモデータの導入 5
+========================================================
+<div class="midcenter" style="margin-left: -400px; margin-top: -400px;">
+<IMG SRC="figure/R_EZR05.png" style="width:900px; height: px">
+</div>
+
+
+本講義中使用したデモデータの導入 6
+========================================================
+<div class="midcenter" style="margin-left: -900px; margin-top: -300px;">
+<IMG SRC="figure/R_EZR06.png" style="width:900px; height: px">
+</div>
+
+<div class="midcenter" style="margin-left: 0px; margin-top: -300px;">
+<IMG SRC="figure/R_EZR07.png" style="width:900px; height: px">
+</div>
+
+本当に最後です！
+========================================================
+<br>
+<br>
+<br>
+<large>講義のスライド欲しい！</large>
+
+<big>アドレスはこちら：[http://winterwang.github.io/Epi_exercise/slides.html#/](http://winterwang.github.io/Epi_exercise/slides.html#/)</big>
+
+<large>スライドと解析のプログラム欲しい！</large>
+
+<big>アドレスはこちら:[https://github.com/winterwang/Epi_exercise](https://github.com/winterwang/Epi_exercise)</big>
+
+<br>
+<br>
+<large>課題頑張ってください！</large>
